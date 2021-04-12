@@ -96,7 +96,3 @@ print(forecast["DailyForecasts"][0]["RealFeelTemperature"]["Minimum"])
 print(forecast["DailyForecasts"][0]["RealFeelTemperature"]["Maximum"])
 print(forecast["DailyForecasts"][0]["Day"]["IconPhrase"])
 
-
-
-#print(json.dumps(currWeather, indent=4))
-#print(json.dumps(forecast, indent=4))
