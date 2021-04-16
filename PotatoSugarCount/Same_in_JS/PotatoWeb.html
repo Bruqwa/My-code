@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta content="width=device-width">
+        <title>PotatoSugarCount</title>
+        <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+        <style>
+            body
+            {background-color: olivedrab;
+            color: white;
+            font-family: 'Kanit', sans-serif;
+            margin: 0;}
+
+            a {text-decoration: none;}
+
+            nav
+            {display: block;
+            width: 500px;
+            margin: 0 auto 30px;
+            background-color: darkgreen;}
+
+            ul
+            {list-style: none;
+            margin: 0 auto;
+            padding-left: 0;
+            }
+
+            li
+            {display: inline;}
+            
+            h2 {color: yellow;}
+            #button {
+                background-color: darkgreen;
+                border: none;
+                color: yellow;
+                padding: 10px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                font-family: 'Kanit', sans-serif;
+            }
+            
+            #button:hover {background-color: green; color: white; transition: .3s linear;}
+        </style>
+    </head>
+    <body>
+        <h2 align="center">Potato Sugar Count</h2>
+        <p align="center">By this form you can count amount of sugar in potatos!</p>
+        <p align="center">Enter amount of potatos in gramms:<input type="text" id="m_Potato" value="" /></p>
+        <p align="center">Amount of sugar in gramms:<input type="text" id="m_Sugar" value=""/>
+        </p>
+        <p align="center">Volume of sugar in ml:<input type="text" id="v_Sugar" value=""/>
+        </p>
+        <p align="center">Amount of spoons of sugar:<input type="text" id="s_poon" value=""/><br/><button id="button" onclick="potatoSugar()">Calculate</button>
+        </p>
+        
+        <script src="PotatoWeb.js"></script>
+    </body>
+</html>
+        
