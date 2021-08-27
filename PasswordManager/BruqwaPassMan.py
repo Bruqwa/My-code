@@ -1,7 +1,7 @@
-import tkinter
-from tkinter import ttk
-import random
-import sqlite3
+import tkinter #gui import
+from tkinter import ttk #tree view
+import random #for password generator
+import sqlite3 #database to store generated passwords
 
 
 def generator(length): #password generator function
@@ -42,7 +42,6 @@ def generator(length): #password generator function
 		userInput.delete(0, tkinter.END)
 		userInput.insert(0, 'Enter digit only!')
 		out.insert(0, 'Enter digit only!')
-
 
 
 class Database: #sqlite3 handling
