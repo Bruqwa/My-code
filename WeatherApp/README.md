@@ -1,7 +1,5 @@
 # WeatherApp
 
-12 april 2021
-
 Description:
 Little app to check the weather in your location.
 It uses AccuWeather API (https://developer.accuweather.com/)
