@@ -4,7 +4,7 @@ import random
 import sqlite3
 
 
-def generator(length):
+def generator(length): #password generator function
 	
 	if length.isdigit():
 	
@@ -44,8 +44,9 @@ def generator(length):
 		out.insert(0, 'Enter digit only!')
 
 
-class Database:
-  
+
+class Database: #sqlite3 handling
+
 	def __init__(self):
 		self.conn = sqlite3.connect('data.sqlite')
 		self.cur = self.conn.cursor()
@@ -65,19 +66,19 @@ class Database:
 		self.cur.execute('DELETE FROM Passwords WHERE id=?', (str(index),))
 		self.conn.commit()		
 
-	def __del__(self):
+	def __del__(self): #closes sql connection
 		self.conn.close()
 
 data = Database()
 
-def view_in_tree(tree):
+def view_in_tree(tree): #refreshes tree view
 	tree.delete(*tree.get_children())
 	rows = data.view()
 	for row in rows:
 		#print(row)
 		tree.insert('', tkinter.END, values = row)
 
-def not_common():
+def not_common(): #validates existing names and passwords in database
 	mark = []
 	rows = data.view()
 	for row in rows:
@@ -126,6 +127,8 @@ def delete_row(tree):
 		pass
 
 
+#all the gui code
+
 window = tkinter.Tk()
 
 window['bg'] = '#000000'
@@ -148,6 +151,7 @@ tree.heading('id', text = 'ID')
 tree.heading('Name', text = 'Name')
 tree.heading('Password', text = 'Password')
 tree.grid(column = 1, row = 1, rowspan = 7)
+
 
 title1 = tkinter.Label(frame, text = 'Enter password length\n(should be more then 4): ', bg = 'black', fg = 'orange', font =70)
 title1.grid(column = 0, row = 0, stick = 'we', padx = 10, pady = 10)
@@ -182,6 +186,7 @@ btnDelete.grid(column = 1, stick = 'es', row = 0, padx = 0, pady = 10)
 s = ttk.Style()
 s.configure('Treeview', background = '#000', foreground = 'lime')
 
-view_in_tree(tree)
+view_in_tree(tree) #tree view refresh
 
-window.mainloop()
+
+window.mainloop() #gui loop
