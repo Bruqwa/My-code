@@ -247,7 +247,5 @@ s = ttk.Style()
 s.configure('Treeview', color = '#000', background = '#000', foreground = 'lime')
 
 on_off()
-#view_in_tree(tree) #tree view refresh
-
 
 window.mainloop() #gui loop
