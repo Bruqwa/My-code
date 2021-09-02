@@ -1,12 +1,12 @@
-import tkinter #gui import
-from tkinter import ttk #tree view
-import random #for password generator
-import sqlite3 #database to store generated passwords
+import tkinter
+from tkinter import ttk
+import random
+import sqlite3
 
 
 def generator(length): #password generator function
 	
-	if length.isdigit():
+	if length.isdigit() and int(length) < 1000:
 	
 		length = int(length)
 		upperLetters = 'ABCDEFGHIJKLOPQRSTUVWXYZ'
@@ -37,11 +37,19 @@ def generator(length): #password generator function
 		out.delete(0, tkinter.END)
 		out.insert(0, password)
 	
-	else:
-		out.delete(0, tkinter.END)
+	elif len(length) == 0:
 		userInput.delete(0, tkinter.END)
-		userInput.insert(0, 'Enter digit only!')
-		out.insert(0, 'Enter digit only!')
+		userInput.insert(0, 'ENTER DIGIT ONLY!')
+
+	elif int(length) > 1000:
+		userInput.delete(0, tkinter.END)
+		userInput.insert(0, 'TOO LONG!')
+
+	else:
+		userInput.delete(0, tkinter.END)
+		userInput.insert(0, 'ENTER DIGIT ONLY!')
+
+
 
 
 class Database: #sqlite3 handling
@@ -63,19 +71,31 @@ class Database: #sqlite3 handling
 
 	def delete(self, index):
 		self.cur.execute('DELETE FROM Passwords WHERE id=?', (str(index),))
-		self.conn.commit()		
+		self.conn.commit()
+
+	def copy(self, index):
+		self.cur.execute('SELECT password FROM Passwords WHERE id=?', (str(index),))
+		c = self.cur.fetchall()
+		return str(c[0][0])
+
 
 	def __del__(self): #closes sql connection
 		self.conn.close()
 
 data = Database()
 
-def view_in_tree(tree): #refreshes tree view
+switch = True
+
+def view_in_tree(tree): #refreshes tree view	
 	tree.delete(*tree.get_children())
 	rows = data.view()
+	hidden = '******************************'
+	global switch
 	for row in rows:
-		#print(row)
-		tree.insert('', tkinter.END, values = row)
+		if switch == True:
+			tree.insert('', tkinter.END, values = row)
+		else:
+			tree.insert('', tkinter.END, values = (row[0], row[1], hidden))
 
 def not_common(): #validates existing names and passwords in database
 	mark = []
@@ -83,11 +103,11 @@ def not_common(): #validates existing names and passwords in database
 	for row in rows:
 		if str(out.get()) in row[2]:
 			out.delete(0, tkinter.END)
-			out.insert(0, '!!!Password exists!!!')
+			out.insert(0, '!!!PASSWORD EXISTS!!!')
 			mark.append(False)
 		elif str(inputPassName.get()) in row[1]:
 			inputPassName.delete(0, tkinter.END)
-			inputPassName.insert(0, '!!!Name exists!!!')
+			inputPassName.insert(0, '!!!NAME EXISTS!!!')
 			mark.append(False)
 		else:
 			mark.append(True)
@@ -100,14 +120,14 @@ def save_password():
 	def saveit():
 		data.save(inputPassName.get(), out.get())
 		inputPassName.delete(0, tkinter.END)
-		inputPassName.insert(0, 'Password saved!')
+		inputPassName.insert(0, 'PASSWORD SAVED!')
 
 	if len(out.get()) == 0:
 		userInput.delete(0, tkinter.END)
-		userInput.insert(0, 'Generate password!')
+		userInput.insert(0, 'GENERATE PASSWORD!')
 	elif len(inputPassName.get()) == 0:
 		inputPassName.delete(0, tkinter.END)
-		inputPassName.insert(0, 'Enter name!')
+		inputPassName.insert(0, 'ENTER NAME!')
 	else:
 		if not_common():
 			saveit()
@@ -124,6 +144,41 @@ def delete_row(tree):
 		data.delete(index)
 	except IndexError:
 		pass
+
+
+def on_off():
+	global switch
+	if switch == True:
+		btnSwitch.config(text = 'Show')
+		switch = False
+		view_in_tree(tree)
+	else:
+		btnSwitch.config(text = 'Hide ')
+		switch = True
+		view_in_tree(tree)
+		
+	return switch
+
+def copy(event):
+	item_id = event.widget.focus()
+	item = event.widget.item(item_id)
+	values = item['values']
+	index = values[0]
+	p = data.copy(index)
+	cp = tkinter.Tk()
+	cp.withdraw()
+	cp.clipboard_clear()
+	cp.clipboard_append(p)
+	cp.update()
+	cp.destroy()
+	out.delete(0, tkinter.END)
+	out.insert(0, 'COPIED TO CLIPBOARD!')
+
+
+def clear(event):
+	item_id = event.widget.focus()
+	item = event.widget.delete(0, tkinter.END)
+	
 
 
 #all the gui code
@@ -149,7 +204,8 @@ tree.column('Password', width = 250)
 tree.heading('id', text = 'ID')
 tree.heading('Name', text = 'Name')
 tree.heading('Password', text = 'Password')
-tree.grid(column = 1, row = 1, rowspan = 7)
+tree.grid(column = 1, row = 1, rowspan = 7, columnspan = 2)
+tree.bind('<Double-Button-1>', copy)
 
 
 title1 = tkinter.Label(frame, text = 'Enter password length\n(should be more then 4): ', bg = 'black', fg = 'orange', font =70)
@@ -157,6 +213,7 @@ title1.grid(column = 0, row = 0, stick = 'we', padx = 10, pady = 10)
 
 userInput = tkinter.Entry(frame, bg = 'black', fg = 'orange', justify='center', insertbackground = 'orange')
 userInput.grid(column = 0, row = 1, stick = 'we', padx = 10, pady = 10)
+userInput.bind('<FocusIn>', clear)
 
 btnGen = tkinter.Button(frame, text = 'Generate', bg = 'orange', command = lambda: generator(userInput.get()))
 btnGen.grid(column = 0, row = 2, stick = 'we', padx = 10, pady = 10)
@@ -172,6 +229,7 @@ title3.grid(column = 0, row = 5, stick = 'we', padx = 10, pady = 10)
 
 inputPassName = tkinter.Entry(frame, bg = 'black', fg = 'orange', justify='center', insertbackground = 'orange')
 inputPassName.grid(column = 0, row = 6, stick = 'we', padx = 10, pady = 10)
+inputPassName.bind('<FocusIn>', clear)
 
 btnSave = tkinter.Button(frame, text = 'Save password', bg = 'orange', command = lambda: save_password())
 btnSave.grid(column = 0, row = 7, stick = 'we', padx = 10, pady = 10)
@@ -179,13 +237,17 @@ btnSave.grid(column = 0, row = 7, stick = 'we', padx = 10, pady = 10)
 title4 = tkinter.Label(frame, text = 'Saved Passwords: ', bg = 'black', fg = 'orange', font =70)
 title4.grid(column = 1, row = 0, stick = 'ws', padx = 10, pady = 10)
 
+btnSwitch = tkinter.Button(frame, text = 'Show', bg = 'orange', command = lambda: on_off())
+btnSwitch.grid(column = 2, stick = 'es', row = 0, padx = 10, pady = 10)
+
 btnDelete = tkinter.Button(frame, text = 'Delete', bg = 'orange', command = lambda: delete_row(tree))
-btnDelete.grid(column = 1, stick = 'es', row = 0, padx = 0, pady = 10)
+btnDelete.grid(column = 1, stick = 'es', row = 0, padx = 10, pady = 10)
 
 s = ttk.Style()
-s.configure('Treeview', background = '#000', foreground = 'lime')
+s.configure('Treeview', color = '#000', background = '#000', foreground = 'lime')
 
-view_in_tree(tree) #tree view refresh
+on_off()
+#view_in_tree(tree) #tree view refresh
 
 
 window.mainloop() #gui loop
