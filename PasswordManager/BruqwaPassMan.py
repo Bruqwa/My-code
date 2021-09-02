@@ -234,7 +234,7 @@ inputPassName.bind('<FocusIn>', clear)
 btnSave = tkinter.Button(frame, text = 'Save password', bg = 'orange', command = lambda: save_password())
 btnSave.grid(column = 0, row = 7, stick = 'we', padx = 10, pady = 10)
 
-title4 = tkinter.Label(frame, text = 'Saved Passwords: ', bg = 'black', fg = 'orange', font =70)
+title4 = tkinter.Label(frame, text = 'Saved Passwords:\n(double click to copy)', bg = 'black', fg = 'orange', font =70)
 title4.grid(column = 1, row = 0, stick = 'ws', padx = 10, pady = 10)
 
 btnSwitch = tkinter.Button(frame, text = 'Show', bg = 'orange', command = lambda: on_off())
