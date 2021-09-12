@@ -1,4 +1,5 @@
 from fastapi import FastAPI, WebSocket
+import json
 
 
 app = FastAPI()
@@ -8,6 +9,4 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
-        j = json.loads(data)
-        #print(j)
-        await websocket.send_text(f"Message: {j['value']}")
+        await websocket.send_text(data)
