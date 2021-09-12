@@ -22,8 +22,11 @@
                 messages.appendChild(message)
             };
             function send(event) {
-                var input = document.getElementById("input")
-                socket.send(input.value)
+                var obj = new Object();
+                obj.input = document.getElementById("input")
+                obj.value = obj.input.value
+                var jsonstr = JSON.stringify(obj)
+                socket.send(jsonstr)
                 input.value = ''
                 event.preventDefault()
             }
