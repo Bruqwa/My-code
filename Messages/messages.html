@@ -10,8 +10,8 @@
             <input type="text" id="input"/>
             <button>Send</button>
         </form>
-        <ol id='list'>
-        </ol>
+        <ul id='list'>
+        </ul>
         <script>
             var socket = new WebSocket("ws://127.0.0.1:8000/messages");
             socket.onmessage = function(event) {
@@ -21,7 +21,7 @@
                 //console.log(j)
                 var jt = JSON.parse(j)
                 //console.log(jt)
-                var content = document.createTextNode(jt.value)
+                var content = document.createTextNode(jt.input + jt.value)
                 message.appendChild(content)
                 messages.appendChild(message)
             };
