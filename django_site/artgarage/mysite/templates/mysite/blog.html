@@ -1,0 +1,40 @@
+{% extends 'mysite/base.html' %}
+
+{% block nav_active_blog %}active{% endblock %}
+
+{% block content %}
+<style type="text/css">
+	#text {
+		padding-top: 90px;
+	}
+	#head {
+		padding-bottom: 1em;
+	}
+	#post {
+		padding-bottom: 1em;
+	}
+	h4{
+		text-decoration: inherit;
+	}
+</style>
+<div class="container" id='text'>
+		<div class="row"></div>
+		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+			
+			{% if blog_list %}
+			
+			<ul>
+			{% for b in blog_list %}
+				<li class="text">
+					<h4>{{b.post_head}}</h4>
+					<p>{{b.pub_date}}</p>
+					<p>{{ b.blog_post_text }}</p>
+
+				</li>
+			</ul>
+			{% endfor %}					
+			{% else %}
+				<p class="lead text">Здесь пока нет публикаций.</p>
+			{% endif %}
+		</div>
+{% endblock %}

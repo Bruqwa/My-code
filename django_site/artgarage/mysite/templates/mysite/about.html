@@ -1,0 +1,29 @@
+{% extends 'mysite/base.html' %}
+
+{% block nav_active_about %}active{% endblock %}
+
+{% block content %}
+<style type="text/css">
+	#text {
+		padding-top: 90px;
+	}
+</style>
+<div class="container" id='text'>
+		<div class="row"></div>
+		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
+			<h1>Про нас</h1>
+			{% if about_objects %}
+			
+			<ul>
+			{% for a in about_objects %}
+				<li class="text">
+					<p>{{ a.about_text}}</p>
+				</li>
+			</ul>
+			{% endfor %}					
+			{% else %}
+				<p class="lead text">Здесь пока нет публикаций.</p>
+			{% endif %}
+		</div>
+
+{% endblock %}
